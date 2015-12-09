@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WiZ出席管理</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="app_key">c0b8bed9c1b02de229b42749a10513e4172fa7f0a74af1cad9f7066363f6de72</string>
+    <string name="client_key">117174c550db48776b182456a17e5c256c4e7291d02a457083ed9b13d4720a5a</string>
+</resources>
