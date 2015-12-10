@@ -27,7 +27,10 @@ import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBUser;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -41,12 +44,12 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     private NCMBUser LoginUser;
     public String mailAddress, subjname;
     private boolean flg;
-    private Button Logoutbtn, Editbtn;
+    private Button Logoutbtn, Editbtn, PAbtn;
     ListView subjList;
     public static SubjectAsyncTask sbjAsync;
     private Context context;
     SubjectAdapter adapter;
-    NCMBObject obj;
+    NCMBObject obj,obj2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +114,64 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             @Override
             public void onClick(View v) {
                 ShowLogInfo("Editbtnが押された");
-                obj = new NCMBObject("Pre_Absence");
-//                obj.put();
+                NCMBQuery<NCMBObject> queryA = new NCMBQuery<>("Subject");
+                queryA.whereEqualTo("subject_name", "Objective-C");
+                queryA.findInBackground(new FindCallback<NCMBObject>() {
+                    @Override
+                    public void done(List<NCMBObject> list, NCMBException e) {
+                        if (e != null) {
+
+                        }else {
+                            obj2 = list.get(0);
+
+                            obj = new NCMBObject("Pre_Absence");
+//                            obj.fetchInBackground();
+                            obj.setObjectId("47jmmCb4E5CnVmDA");
+                            obj.put("objective_c",0);
+//                            obj.put("sbjPA", Arrays.asList(obj2.getString("subject_name"),1));
+                            obj.saveInBackground(null);
+                            try {
+                                obj.save();
+
+                            } catch (NCMBException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                });
             }
         });
+
+//        PAbtn = (Button) findViewById(R.id.attendbtn);
+//        PAbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                NCMBQuery<NCMBObject> queryA = new NCMBQuery<>("Subject");
+//                queryA.whereEqualTo("subject_name", "Objective-C");
+//                queryA.findInBackground(new FindCallback<NCMBObject>() {
+//                    @Override
+//                    public void done(List<NCMBObject> list, NCMBException e) {
+//                        if (e != null) {
+//
+//                        }else {
+//                            obj2 = list.get(0);
+//
+//                            obj = new NCMBObject("Pre_Absence");
+//                            obj.setObjectId("47jmmCb4E5CnVmDA");
+//                            obj.fetchInBackground();
+//                            obj.put("sbjPA", Arrays.asList(obj2.getString("subject_name"),1));
+//                            obj.saveInBackground(null);
+//                            try {
+//                                obj.save();
+//
+//                            } catch (NCMBException ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        });
 
 
 //        同期処理

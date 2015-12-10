@@ -27,6 +27,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
     public static ProgressDialog dialog;
     private Context context;
     private Activity activity;
+    NCMBObject obj,obj2;
 
     //AsyncTaskCallbackのインターフェースの登録
     public interface AsyncTaskCallback{
@@ -72,6 +73,12 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
                         s.getString("subject_name")
                 );
                 list.add(subject);
+
+                //年間の授業の数分、生徒の出欠テーブルにフィールドを作成する
+                obj = new NCMBObject("Pre_Absence");
+                obj.setObjectId("47jmmCb4E5CnVmDA");
+                obj.put(s.getString("pa_fieldname"), 0);
+                obj.saveInBackground(null);
             }
 
         } catch (NCMBException e) {
