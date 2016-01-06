@@ -91,6 +91,15 @@ public class Login_activity extends Activity {
                 startActivity(intent);
             }
         });
+
+        signButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(Login_activity.this, SignUp_Teacher_Activity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     public  void onDestroy() {

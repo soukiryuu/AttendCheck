@@ -27,6 +27,8 @@
         </activity>
         <activity android:name=".SignUp_Activity" >
         </activity>
+        <activity android:name=".SignUp_Teacher_Activity" >
+        </activity>
         <activity android:name=".LoginAfter_activity" >
         </activity>
         <activity android:name=".UserActivity" >

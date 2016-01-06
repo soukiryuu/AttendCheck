@@ -12,6 +12,9 @@ import com.nifty.cloud.mb.core.FindCallback;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
+import com.nifty.cloud.mb.core.NCMBUser;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +26,7 @@ import java.util.List;
 public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subject>> implements DialogInterface.OnCancelListener {
 
     private AsyncTaskCallback asyncTaskCallback = null;
+    private NCMBUser LoginUser;
     final String TAG = "SubjectAsyncTask";
     public static ProgressDialog dialog;
     private Context context;
@@ -60,28 +64,48 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
     protected ArrayList<Subject> doInBackground(String... params) {
         Log.d(TAG, "doInBackground - " + params[0]);
 
+        LoginUser = NCMBUser.getCurrentUser();
+        Log.d("SubjectAsyncTask", NCMBUser.getCurrentUser().toString());
+
         ArrayList<Subject> list = new ArrayList<Subject>();
+
+
 
 //      同期処理
         NCMBQuery<NCMBObject> query = new NCMBQuery<>("Subject");
-        query.whereContainedInArray("subject_time", Arrays.asList(1,2,3));
+//        query.whereContainedInArray("subject_time", Arrays.asList(1,2,3));
+        query.whereEqualTo("subject_id", 1);
         try {
+//            List<String> list1 = obj.getList();
             List<NCMBObject> sbj_name = query.find();
             for (NCMBObject s: sbj_name) {
                 Subject subject = new Subject();
-                subject.setSubjectName(
-                        s.getString("subject_name")
-                );
+                subject.setSubjectName(s.getString("subject_name"));
+
+//                List list1 = new ArrayList();
+//                list1.add(s.getList("subject_time"));
+//                String[] strings = (String[]) list1.toArray(new String[0]);
+//                Log.d(TAG,strings[0]);
+
                 list.add(subject);
 
                 //年間の授業の数分、生徒の出欠テーブルにフィールドを作成する
-                obj = new NCMBObject("Pre_Absence");
-                obj.setObjectId("47jmmCb4E5CnVmDA");
-                obj.put(s.getString("pa_fieldname"), 0);
-                obj.saveInBackground(null);
+//                obj = new NCMBObject("Pre_Absence");
+//                obj.setObjectId(LoginUser.getObjectId());
+//                obj.put("student_pointer", NCMBUser.getCurrentUser());
+//                obj.put("subject_id", s.getString("subject_id"));
+//                obj2 = new NCMBObject("Subject");
+//                obj2.setObjectId("subject_id");
+//                obj.put("subject_pointer", obj2);
+//                obj.put("presence", 0);
+//                obj.put("absence", 0);
+//                obj.saveInBackground(null);
+
             }
 
+
         } catch (NCMBException e) {
+            ShowLogInfo("エラーコード:" + e.getCode().toString());
             e.printStackTrace();
         }
         return list;

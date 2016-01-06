@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Message;
 import android.preference.DialogPreference;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -25,6 +27,7 @@ import com.nifty.cloud.mb.core.FindCallback;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
+import com.nifty.cloud.mb.core.NCMBRole;
 import com.nifty.cloud.mb.core.NCMBUser;
 
 import org.json.JSONObject;
@@ -59,6 +62,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         GPSSerch();
 
         LoginUser = NCMBUser.getCurrentUser();
+        Log.d("UserActivity", NCMBUser.getCurrentUser().toString());
 
         Intent flgIntent = getIntent();
         flg = flgIntent.getBooleanExtra("flag", false);
@@ -67,6 +71,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             ShowLogInfo("flgがtrue");
             mailAddress = flgIntent.getStringExtra("mailaddress");
             LoginUser.setMailAddress(mailAddress);
+            LoginUser.put("position", "student");
 
             try {
                 LoginUser.save();
@@ -74,11 +79,26 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                 e.printStackTrace();
             }
 
+//            //会員ロールに追加
+//            NCMBUser user = new NCMBUser();
+//            user.setObjectId(LoginUser.getObjectId());
+            ShowLogInfo(LoginUser.getObjectId());
+
+            NCMBRole role = new NCMBRole("Student");
+            role.addUserInBackground(Arrays.asList(NCMBUser.getCurrentUser()), new DoneCallback() {
+                @Override
+                public void done(NCMBException e) {
+                    ShowLogInfo("ロールに追加できませんでした。" + e.getMessage()  );
+                    ShowLogInfo(e.getCode());
+                }
+            });
+
             //データストアにアカウントと関連付けするためにポインタを付ける
             //NCMBObjectをインスタンス生成してデータストアの名前を指定
             obj = new NCMBObject("Pre_Absence");
             //現在ログインしているアカウントをフィールドに入れる
-            obj.put("student_id", NCMBUser.getCurrentUser());
+            obj.put("student_pointer", NCMBUser.getCurrentUser());
+            obj.put("student_id", LoginUser.getObjectId());
 
             try {
                 obj.save();
@@ -114,31 +134,32 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             @Override
             public void onClick(View v) {
                 ShowLogInfo("Editbtnが押された");
-                NCMBQuery<NCMBObject> queryA = new NCMBQuery<>("Subject");
-                queryA.whereEqualTo("subject_name", "Objective-C");
-                queryA.findInBackground(new FindCallback<NCMBObject>() {
-                    @Override
-                    public void done(List<NCMBObject> list, NCMBException e) {
-                        if (e != null) {
-
-                        }else {
-                            obj2 = list.get(0);
-
-                            obj = new NCMBObject("Pre_Absence");
-//                            obj.fetchInBackground();
-                            obj.setObjectId("47jmmCb4E5CnVmDA");
-                            obj.put("objective_c",0);
-//                            obj.put("sbjPA", Arrays.asList(obj2.getString("subject_name"),1));
-                            obj.saveInBackground(null);
-                            try {
-                                obj.save();
-
-                            } catch (NCMBException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    }
-                });
+//                NCMBQuery<NCMBObject> queryA = new NCMBQuery<>("Subject");
+//                queryA.whereEqualTo("subject_name", "Objective-C");
+//                queryA.findInBackground(new FindCallback<NCMBObject>() {
+//                    @Override
+//                    public void done(List<NCMBObject> list, NCMBException e) {
+//                        if (e != null) {
+//
+//                        }else {
+//                            obj2 = list.get(0);
+//
+//                            obj = new NCMBObject("Pre_Absence");
+////                            obj.fetchInBackground();
+//                            obj.setObjectId("47jmmCb4E5CnVmDA");
+//                            obj.put("student_id", LoginUser.getObjectId());
+//                            obj.put("student_pointer", NCMBUser.getCurrentUser());
+////                            obj.put("sbjPA", Arrays.asList(obj2.getString("subject_name"),1));
+//                            obj.saveInBackground(null);
+//                            try {
+//                                obj.save();
+//
+//                            } catch (NCMBException ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                });
             }
         });
 
@@ -170,33 +191,6 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
 //                        }
 //                    }
 //                });
-//            }
-//        });
-
-
-//        同期処理
-//        NCMBQuery<NCMBObject> query = new NCMBQuery<>("Subject");
-//        query.whereEqualTo("subject_name", "Objective-C");
-//        try {
-//            List<NCMBObject> sbj_name = query.find();
-//            obj = sbj_name.get(0);
-//            subjname = obj.getString("subject_name").toString();
-//            ShowLogInfo("subjname =" + subjname);
-//        } catch (NCMBException e) {
-//            e.printStackTrace();
-//        }
-
-//       非同期処理
-//        query.findInBackground(new FindCallback<NCMBObject>() {
-//            @Override
-//            public void done(List<NCMBObject> list, NCMBException e) {
-//                if (e != null) {
-//                    Toast.makeText(getApplication(), "error", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    obj = list.get(0);
-//                    subjname = obj.getString("subject_name").toString();
-//                }
-//                ShowLogInfo("subjname1 =" + subjname);
 //            }
 //        });
     }
@@ -269,8 +263,27 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         subjList = (ListView) findViewById(R.id.subjectList);
         adapter = new SubjectAdapter(UserActivity.this);
         adapter.setSubjlist(result);
+        subjList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Log.d("ItemClick", "Position=" + String.valueOf(position));
+                NCMBQuery<NCMBObject> query = new NCMBQuery<>("Pre_Absence");
+                query.whereEqualTo("student_id", LoginUser.getObjectId());
+                Log.d("UserActivity", LoginUser.getObjectId());
+                query.findInBackground(new FindCallback<NCMBObject>() {
+                    @Override
+                    public void done(List<NCMBObject> list, NCMBException e) {
+                        obj = list.get(0);
+                        Log.d("UserActivity",obj.getObjectId().toString());
+
+                    }
+                });
+            }
+        });
         subjList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+
     }
 
 //    GPSのON・OFFの判断メソッド
