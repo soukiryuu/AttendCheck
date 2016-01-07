@@ -61,7 +61,7 @@ public class SignUp_Teacher_Activity extends Activity {
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent(SignUp_Teacher_Activity.this, UserActivity.class);
+                                            Intent intent = new Intent(SignUp_Teacher_Activity.this, TeacherActivity.class);
                                             intent.putExtra("mailaddress", mailAddress);
                                             intent.putExtra("flag", true);
                                             startActivity(intent);

@@ -1,7 +1,9 @@
 package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.attendcheck.attendcheck.Adapter.Period_Time_Adapter;
 import com.example.attendcheck.attendcheck.AsyncTask.PeriodTimeAsyncTask;
+import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
 import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
@@ -22,6 +25,7 @@ import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBUser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by watanabehiroaki on 2016/01/06.
@@ -30,8 +34,16 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
 
     private NCMBUser LoginUser;
     private Button Logoutbtn;
+    private boolean flg;
     public Spinner spinner;
     public Period_Time_Adapter period_time_adapter;
+    public String mailAddress, subjname;
+    public static PeriodTimeAsyncTask periodTimeAsyncTask;
+    private Context context;
+
+//    public TeacherActivity(Context context) {
+//        this.context = context;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +51,35 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         setContentView(R.layout.activity_teacher);
 
         LoginUser = NCMBUser.getCurrentUser();
+
+        Intent flgIntent = getIntent();
+        flg = flgIntent.getBooleanExtra("flag", false);
+
+        if (flg == true) {
+            ShowLogInfo("flgがtrue");
+            mailAddress = flgIntent.getStringExtra("mailaddress");
+            LoginUser.setMailAddress(mailAddress);
+            LoginUser.put("position", "teacher");
+
+            try {
+                LoginUser.save();
+            } catch (NCMBException e) {
+                e.printStackTrace();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(TeacherActivity.this);
+                dialog.setMessage("登録したアドレスが重複しているため使用できません。")
+                        .setTitle("登録エラーです")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent intent = new Intent(TeacherActivity.this, TeacherActivity.class);
+//                                intent.putExtra("mailaddress", mailAddress);
+//                                intent.putExtra("flag", true);
+//                                startActivity(intent);
+                            }
+                        });
+                dialog.create().show();
+            }
+        }
 
         if (LoginUser == null) {
             // 未ログインのときは、
@@ -57,7 +98,9 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
             }
         });
 
-
+        //       AsyncTaskの生成
+        periodTimeAsyncTask = new PeriodTimeAsyncTask(this, context, this);
+        periodTimeAsyncTask.execute(subjname);
     }
 
     @Override
@@ -121,6 +164,7 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         spinner = (Spinner)findViewById(R.id.subjectSpinner);
         period_time_adapter = new Period_Time_Adapter(TeacherActivity.this);
         period_time_adapter.setSubjlist(result);
+        spinner.setAdapter(period_time_adapter);
 
         String item = (String)spinner.getSelectedItem();
         ShowLogInfo("選択されたitem" + item.toString());

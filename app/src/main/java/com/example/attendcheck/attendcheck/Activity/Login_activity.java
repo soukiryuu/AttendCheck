@@ -23,6 +23,7 @@ public class Login_activity extends Activity {
 
     private EditText mUserMailAddress;
     private EditText mPassword;
+    private NCMBUser LoginUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +51,19 @@ public class Login_activity extends Activity {
                     NCMBUserService userService = (NCMBUserService) NCMB.factory(NCMB.ServiceType.USER);
                     NCMBUser user = userService.loginByMail(userMailAddress, userPassword);
                     Toast.makeText(getApplication(), "ログイン成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Login_activity.this, UserActivity.class);
-                    intent.putExtra("flag",false);
-                    startActivity(intent);
+                    LoginUser = NCMBUser.getCurrentUser();
+                    ShowLogInfo(LoginUser.getString("position"));
+                    String positionName = LoginUser.getString("position");
+                    if (positionName == "student") {
+                        Intent intent = new Intent(Login_activity.this, UserActivity.class);
+                        intent.putExtra("flag",false);
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(Login_activity.this, TeacherActivity.class);
+                        intent.putExtra("flag",false);
+                        startActivity(intent);
+                    }
+
                 } catch (NCMBException e) {
                     Toast.makeText(getApplication(), "ログイン失敗！", Toast.LENGTH_SHORT).show();
                     Log.d("失敗",e.getMessage());

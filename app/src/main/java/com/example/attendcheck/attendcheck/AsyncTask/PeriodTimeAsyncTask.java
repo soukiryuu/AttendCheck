@@ -24,7 +24,7 @@ public class PeriodTimeAsyncTask extends AsyncTask<String, Integer, ArrayList<Pe
     private AsyncTaskCallback asyncTaskCallback = null;
     private Context context;
     private Activity activity;
-    final String TAG = "SubjectAsyncTask";
+    final String TAG = "PeriodTimeAsyncTask";
     public static ProgressDialog dialog;
     private NCMBUser LoginUser;
 
