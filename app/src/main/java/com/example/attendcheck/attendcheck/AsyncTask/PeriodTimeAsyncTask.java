@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
@@ -73,15 +74,15 @@ public class PeriodTimeAsyncTask extends AsyncTask<String, Integer, ArrayList<Pe
 //            List<String> list1 = obj.getList();
             List<NCMBObject> sbj_name = query.find();
             for (NCMBObject s: sbj_name) {
-                Subject subject = new Subject();
-                subject.setSubjectName(s.getString("subject_name"));
+                PeriodTime_Subject pSubject = new PeriodTime_Subject();
+                pSubject.setSubjectName(s.getString("subject_name"));
 
 //                List list1 = new ArrayList();
 //                list1.add(s.getList("subject_time"));
 //                String[] strings = (String[]) list1.toArray(new String[0]);
 //                Log.d(TAG,strings[0]);
 
-                list.add(subject);
+                list.add(pSubject);
             }
 
 

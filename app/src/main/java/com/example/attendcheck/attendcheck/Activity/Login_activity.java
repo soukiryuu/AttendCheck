@@ -1,16 +1,15 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.nifty.cloud.mb.core.LoginCallback;
+import com.example.attendcheck.attendcheck.R;
 import com.nifty.cloud.mb.core.NCMB;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBUser;

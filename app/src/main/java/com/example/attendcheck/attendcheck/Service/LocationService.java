@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.Service;
 
 import android.app.AlertDialog;
 import android.app.Service;

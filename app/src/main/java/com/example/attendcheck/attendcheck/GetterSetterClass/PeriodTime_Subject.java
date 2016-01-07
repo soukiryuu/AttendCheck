@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.GetterSetterClass;
 
 import android.util.Log;
 
@@ -6,7 +6,16 @@ import android.util.Log;
  * Created by watanabehiroaki on 2016/01/07.
  */
 public class PeriodTime_Subject {
+    long id;
     String subjectName;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getSubjectName() {
         return subjectName;

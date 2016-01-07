@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.GetterSetterClass;
 
 import android.nfc.Tag;
 import android.util.Log;

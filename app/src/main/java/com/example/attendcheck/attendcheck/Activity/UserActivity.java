@@ -1,27 +1,27 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.os.Message;
-import android.preference.DialogPreference;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
+import com.example.attendcheck.attendcheck.Service.LocationService;
+import com.example.attendcheck.attendcheck.R;
+import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
+import com.example.attendcheck.attendcheck.Adapter.SubjectAdapter;
 import com.nifty.cloud.mb.core.DoneCallback;
 import com.nifty.cloud.mb.core.FindCallback;
 import com.nifty.cloud.mb.core.NCMBException;
@@ -30,13 +30,9 @@ import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBRole;
 import com.nifty.cloud.mb.core.NCMBUser;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 
 /**

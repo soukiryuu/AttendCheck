@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
+import com.example.attendcheck.attendcheck.R;
+import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
 
 import java.util.ArrayList;
 
@@ -16,14 +20,14 @@ public class Period_Time_Adapter extends BaseAdapter {
 
     Context context;
     LayoutInflater layoutInflater = null;
-    ArrayList<Subject> subjlist;
+    ArrayList<PeriodTime_Subject> subjlist;
 
     public Period_Time_Adapter(Context context) {
         this.context = context;
         this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setSubjlist(ArrayList<Subject> subjlist) {
+    public void setSubjlist(ArrayList<PeriodTime_Subject> subjlist) {
         this.subjlist = subjlist;
     }
 

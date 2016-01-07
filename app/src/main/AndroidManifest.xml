@@ -17,7 +17,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Login_activity"
+            android:name=".Activity.Login_activity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +25,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUp_Activity" >
+        <activity android:name=".Activity.SignUp_Activity" >
         </activity>
-        <activity android:name=".SignUp_Teacher_Activity" >
+        <activity android:name=".Activity.SignUp_Teacher_Activity" >
         </activity>
-        <activity android:name=".LoginAfter_activity" >
+        <activity android:name=".Activity.LoginAfter_activity" >
         </activity>
-        <activity android:name=".UserActivity" >
+        <activity android:name=".Activity.UserActivity" >
+        </activity>
+        <activity android:name=".Activity.TeacherActivity" >
         </activity>
 
         <service
-            android:name=".LocationService"
+            android:name=".Service.LocationService"
             android:enabled="true"
             android:exported="true" >
         </service>

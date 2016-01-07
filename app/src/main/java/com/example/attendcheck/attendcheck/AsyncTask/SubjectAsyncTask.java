@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck;
+package com.example.attendcheck.attendcheck.AsyncTask;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,18 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ListView;
 
-import com.nifty.cloud.mb.core.FindCallback;
+import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBUser;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
