@@ -93,6 +93,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                 }
             });
 
+            //↓ログインごとに毎回生成されるので要修正
             //データストアにアカウントと関連付けするためにポインタを付ける
             //NCMBObjectをインスタンス生成してデータストアの名前を指定
             obj = new NCMBObject("Pre_Absence");
