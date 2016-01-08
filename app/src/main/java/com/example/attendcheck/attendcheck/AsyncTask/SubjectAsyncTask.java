@@ -132,7 +132,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
 //    非同期処理中にCancellが要求された時のメソッド
     @Override
     public void onCancel(DialogInterface dialog) {
-        Log.d(TAG, "Dialog onCancell... calling cancel(true)");
+        Log.d(TAG, "Dialog onCancel... calling cancel(true)");
         this.cancel(true);
     }
 

@@ -80,7 +80,7 @@ public class PeriodTimeAsyncTask extends AsyncTask<String, Integer, ArrayList<Pe
 //                List list1 = new ArrayList();
 //                list1.add(s.getList("subject_time"));
 //                String[] strings = (String[]) list1.toArray(new String[0]);
-//                Log.d(TAG,strings[0]);
+                Log.d(TAG,s.getString("subject_name"));
 
                 list.add(pSubject);
             }
@@ -94,8 +94,31 @@ public class PeriodTimeAsyncTask extends AsyncTask<String, Integer, ArrayList<Pe
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
+    protected void onProgressUpdate(Integer... values) {
+        Log.d(TAG, "onProgressUpdate - " + values[0]);
+        dialog.setProgress(values[0]);
+    }
 
+    @Override
+    protected void onCancelled() {
+        Log.d(TAG, "onCancelled");
+        dialog.dismiss();
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<PeriodTime_Subject> result) {
+//        AsyncTaskCallbackに取得してきたデータを入れてあげる
+//        resultに取得したデータが格納される
+        Log.d(TAG, "onPostExecute - " + result);
+        super.onPostExecute(result);
+        asyncTaskCallback.PostExecute(result);
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        Log.d(TAG, "Dialog onCancel... calling cancel(true)");
+        this.cancel(true);
     }
 
     public void ShowLogInfo(String messeage){

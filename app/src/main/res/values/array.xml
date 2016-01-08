@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dayweek">
+        <item>月</item>
+        <item>火</item>
+        <item>水</item>
+        <item>木</item>
+        <item>金</item>
+        <item>土</item>
+        <item>日</item>
+    </string-array>
+
+    <string-array name="periodtime">
+        <item>[1,2,3]</item>
+        <item>[4,5,6]</item>
+    </string-array>
+
+    <string-array name="position">
+        <item>201</item>
+        <item>202</item>
+        <item>203</item>
+        <item>204</item>
+        <item>ソフトウェア開発室</item>
+    </string-array>
+</resources>

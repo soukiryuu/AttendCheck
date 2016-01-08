@@ -266,12 +266,12 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                 Log.d("ItemClick", "Position=" + String.valueOf(position));
                 NCMBQuery<NCMBObject> query = new NCMBQuery<>("Pre_Absence");
                 query.whereEqualTo("student_id", LoginUser.getObjectId());
-                Log.d("UserActivity", LoginUser.getObjectId());
+                Log.d("UserActivity1", LoginUser.getObjectId());
                 query.findInBackground(new FindCallback<NCMBObject>() {
                     @Override
                     public void done(List<NCMBObject> list, NCMBException e) {
                         obj = list.get(0);
-                        Log.d("UserActivity",obj.getObjectId().toString());
+                        Log.d("UserActivity2",obj.getObjectId().toString());
 
                     }
                 });

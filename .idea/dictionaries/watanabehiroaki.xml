@@ -4,12 +4,14 @@
       <w>attendbtn</w>
       <w>attendcheck</w>
       <w>attendrate</w>
+      <w>dayweek</w>
       <w>dbutton</w>
       <w>editbtn</w>
       <w>fieldname</w>
       <w>logintext</w>
       <w>logoutbtn</w>
       <w>mailaddress</w>
+      <w>periodtime</w>
       <w>serch</w>
       <w>subjct</w>
       <w>subjlist</w>

@@ -54,11 +54,13 @@ public class Login_activity extends Activity {
                     LoginUser = NCMBUser.getCurrentUser();
                     ShowLogInfo(LoginUser.getString("position"));
                     String positionName = LoginUser.getString("position");
-                    if (positionName == "student") {
+                    if (positionName.equals("student")) {
+                        Log.d("LoginActivityのif文", "student");
                         Intent intent = new Intent(Login_activity.this, UserActivity.class);
                         intent.putExtra("flag",false);
                         startActivity(intent);
-                    }else {
+                    }else if (positionName.equals("teacher")){
+                        Log.d("LoginActivityのif文", "teacher");
                         Intent intent = new Intent(Login_activity.this, TeacherActivity.class);
                         intent.putExtra("flag",false);
                         startActivity(intent);

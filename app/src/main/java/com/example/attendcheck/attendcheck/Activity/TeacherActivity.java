@@ -5,11 +5,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,13 +36,14 @@ import java.util.Arrays;
 public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.AsyncTaskCallback {
 
     private NCMBUser LoginUser;
-    private Button Logoutbtn;
+    private Button Logoutbtn, periodbtn;
     private boolean flg;
-    public Spinner spinner;
+    public Spinner spinner, dayWeekSpinner, periodTimeSpinner, classroomSpinner;
     public Period_Time_Adapter period_time_adapter;
     public String mailAddress, subjname;
     public static PeriodTimeAsyncTask periodTimeAsyncTask;
     private Context context;
+    public PeriodTime_Subject periodTimeSubject;
 
 //    public TeacherActivity(Context context) {
 //        this.context = context;
@@ -90,6 +94,60 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
             userName.setText(LoginUser.getUserName());
         }
 
+        //       AsyncTaskの生成
+        periodTimeAsyncTask = new PeriodTimeAsyncTask(this, context, this);
+        periodTimeAsyncTask.execute(subjname);
+
+        dayWeekSpinner = (Spinner)findViewById(R.id.dayweekSpinner);
+
+        dayWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner spinner = (Spinner)parent;
+                String dayweek = (String)spinner.getSelectedItem();
+                Log.d("TeacherActivityの曜日", dayweek);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d("TeacherActivityの曜日", "選択なし");
+            }
+        });
+
+        periodTimeSpinner = (Spinner)findViewById(R.id.periodTimeSpinner);
+
+        periodTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner spinner = (Spinner)parent;
+                String periodtime = (String)spinner.getSelectedItem();
+                Log.d("TeacherActivityの時限", periodtime);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        classroomSpinner = (Spinner)findViewById(R.id.classroomSpinner);
+
+        classroomSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner spinner = (Spinner)parent;
+                String classroom = (String)spinner.getSelectedItem();
+                Log.d("TeacherActivityの場所", classroom);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         Logoutbtn = (Button) findViewById(R.id.logoutbtn);
         Logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +156,16 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
             }
         });
 
-        //       AsyncTaskの生成
-        periodTimeAsyncTask = new PeriodTimeAsyncTask(this, context, this);
-        periodTimeAsyncTask.execute(subjname);
+        periodbtn = (Button)findViewById(R.id.periodBtn);
+        periodbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("登録がクリックされた", periodTimeSubject.getSubjectName());
+                Log.d("登録がクリックされた", (String)dayWeekSpinner.getSelectedItem());
+                Log.d("登録がクリックされた", (String)periodTimeSpinner.getSelectedItem());
+                Log.d("登録がクリックされた", (String)classroomSpinner.getSelectedItem());
+            }
+        });
     }
 
     @Override
@@ -166,7 +231,28 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         period_time_adapter.setSubjlist(result);
         spinner.setAdapter(period_time_adapter);
 
-        String item = (String)spinner.getSelectedItem();
-        ShowLogInfo("選択されたitem" + item.toString());
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner spinner = (Spinner) parent;
+                int index = spinner.getSelectedItemPosition();
+                Log.d("TeacherActivity", String.valueOf(index));
+                String item = spinner.getSelectedItem().toString();
+//                String item = (String) spinner.getSelectedItem();
+
+                //AdapterにitemがセットされてるのでAdapterのgetItemで取得する
+                periodTimeSubject =
+                        (PeriodTime_Subject) spinner.getAdapter().getItem(position);
+
+
+                Log.d("TeacherActivity", periodTimeSubject.getSubjectName());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 }
