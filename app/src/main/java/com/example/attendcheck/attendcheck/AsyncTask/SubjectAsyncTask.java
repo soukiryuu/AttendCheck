@@ -90,6 +90,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
 //                obj.setObjectId(LoginUser.getObjectId());
 //                obj.put("student_pointer", NCMBUser.getCurrentUser());
 //                obj.put("subject_id", s.getString("subject_id"));
+
 //                obj2 = new NCMBObject("Subject");
 //                obj2.setObjectId("subject_id");
 //                obj.put("subject_pointer", obj2);

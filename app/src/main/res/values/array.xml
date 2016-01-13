@@ -11,8 +11,8 @@
     </string-array>
 
     <string-array name="periodtime">
-        <item>[1,2,3]</item>
-        <item>[4,5,6]</item>
+        <item>1,2,3</item>
+        <item>4,5,6</item>
     </string-array>
 
     <string-array name="position">

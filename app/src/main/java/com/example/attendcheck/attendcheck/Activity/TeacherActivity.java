@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,18 +25,26 @@ import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
 import com.nifty.cloud.mb.core.DoneCallback;
+import com.nifty.cloud.mb.core.FindCallback;
+import com.nifty.cloud.mb.core.NCMBBase;
 import com.nifty.cloud.mb.core.NCMBException;
+import com.nifty.cloud.mb.core.NCMBObject;
+import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBUser;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by watanabehiroaki on 2016/01/06.
  */
 public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.AsyncTaskCallback {
 
+    private String TAG = "TeacherActivity";
     private NCMBUser LoginUser;
+    private NCMBObject object,object2;
     private Button Logoutbtn, periodbtn;
     private boolean flg;
     public Spinner spinner, dayWeekSpinner, periodTimeSpinner, classroomSpinner;
@@ -44,6 +53,7 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
     public static PeriodTimeAsyncTask periodTimeAsyncTask;
     private Context context;
     public PeriodTime_Subject periodTimeSubject;
+    public int[] pti = new int[3];
 
 //    public TeacherActivity(Context context) {
 //        this.context = context;
@@ -160,10 +170,89 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         periodbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                object = new NCMBObject("PeriodOfTime");
+
+                Log.d("登録がクリックされた", (String) dayWeekSpinner.getSelectedItem());
+                object.put("day_week", (String) dayWeekSpinner.getSelectedItem());
+
+                Log.d("登録がクリックされた", (String) periodTimeSpinner.getSelectedItem());
+                String spStr = (String) periodTimeSpinner.getSelectedItem();
+                String[] pts = spStr.split(",", 0);
+                ArrayList<Integer> listInt  = new ArrayList<Integer>();
+                for (int i=0; i < pts.length; i++){
+                    pti[i] = Integer.parseInt(pts[i]);
+                    Log.d(TAG, String.valueOf(pti[i]));
+                    listInt.add(pti[i]);
+                }
+                object.put("subject_time", listInt);
+
+                //配列作る
+//                int[] arInt = {1,2,3};
+//                try {
+//                    //lisへ変換
+//                    object.addToList("subject_time", Arrays.asList(arInt));
+//                } catch (NCMBException e) {
+//                    ShowLogInfo("エラーコード:" + e.getCode().toString());
+//                    e.printStackTrace();
+//                }
+                Log.d("登録がクリックされた", (String) classroomSpinner.getSelectedItem());
+                object.put("classroom_name", (String) classroomSpinner.getSelectedItem());
+//                Location geo = new Location("test");
+                //仮の位置情報
+//                geo.setLatitude(10.0);
+//                geo.setLongitude(10.0);
+
+//                NCMBBase base = new NCMBBase("classroom");
+//                object.put("geo", geo);
+
                 Log.d("登録がクリックされた", periodTimeSubject.getSubjectName());
-                Log.d("登録がクリックされた", (String)dayWeekSpinner.getSelectedItem());
-                Log.d("登録がクリックされた", (String)periodTimeSpinner.getSelectedItem());
-                Log.d("登録がクリックされた", (String)classroomSpinner.getSelectedItem());
+                object.put("subject_name", periodTimeSubject.getSubjectName());
+                NCMBQuery<NCMBObject> query = new NCMBQuery<NCMBObject>("Subject");
+                query.whereEqualTo("subject_name", periodTimeSubject.getSubjectName());
+                query.findInBackground(new FindCallback<NCMBObject>() {
+                    @Override
+                    public void done(List<NCMBObject> list, NCMBException e) {
+                        if (e != null) {
+                            //検索失敗時の処理
+                        } else {
+                            //検索成功時の処理
+                            object2 = new NCMBObject("Subject");
+                            object2 = list.get(0);
+                            Log.d(TAG, object2.getObjectId());
+                            object2.setObjectId(object2.getObjectId());
+                            object.put("subject_pointer", object2);
+                            object.put("subject_id", object2.getString("subject_id"));
+                            object.saveInBackground(new DoneCallback() {
+                                @Override
+                                public void done(NCMBException e) {
+                                    if (e != null) {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(TeacherActivity.this);
+                                        dialog.setMessage("授業が登録できませんでした。")
+                                                .setTitle("登録エラーです")
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                        dialog.create().show();
+                                    } else {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(TeacherActivity.this);
+                                        dialog.setMessage("授業の登録が完了しました。")
+                                                .setTitle("登録完了")
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                    }
+                                                });
+                                        dialog.create().show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     }
