@@ -44,11 +44,12 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     public String mailAddress, subjname;
     private boolean flg;
     private Button Logoutbtn, Editbtn, PAbtn;
-    ListView subjList;
+    public ListView subjList;
     public static SubjectAsyncTask sbjAsync;
     private Context context;
-    SubjectAdapter adapter;
-    NCMBObject obj,obj2;
+    public SubjectAdapter adapter;
+    private NCMBObject obj,obj2;
+    public Subject sbj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             } catch (NCMBException e) {
                 e.printStackTrace();
             }
+        } else {
+
         }
 
 
@@ -264,15 +267,23 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.d("ItemClick", "Position=" + String.valueOf(position));
+                Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
                 NCMBQuery<NCMBObject> query = new NCMBQuery<>("Pre_Absence");
                 query.whereEqualTo("student_id", LoginUser.getObjectId());
                 Log.d("UserActivity1", LoginUser.getObjectId());
+//                query.whereEqualTo("subject_id", sbj.getSubjectId());
                 query.findInBackground(new FindCallback<NCMBObject>() {
                     @Override
                     public void done(List<NCMBObject> list, NCMBException e) {
+                        obj = new NCMBObject("Pre_Absence");
                         obj = list.get(0);
+                        obj.setObjectId(obj.getObjectId());
                         Log.d("UserActivity2",obj.getObjectId().toString());
-
+                        try {
+                            obj.increment("presence", 1);
+                        } catch (NCMBException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 });
             }

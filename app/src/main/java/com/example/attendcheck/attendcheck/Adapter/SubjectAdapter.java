@@ -56,15 +56,19 @@ public class SubjectAdapter extends BaseAdapter {
         convertView = layoutInflater.inflate(R.layout.subjlist, parent, false);
 
         ((TextView)convertView.findViewById(R.id.subjname)).setText(subjlist.get(position).getSubjectName());
+        ((TextView)convertView.findViewById(R.id.attendrate)).setText(Integer.toString(subjlist.get(position).getAttendRate()));
 
         Button button = (Button) convertView.findViewById(R.id.attendbtn);
-        button.setTag(position);
+        String subject_ID = subjlist.get(position).getSubjectId();
+//        button.setTag(position);
+        button.setTag(subject_ID);
 
         final ListView listView = (ListView) parent;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("SubjectAdapter", "ボタンが押された");
+                Log.d("SubjectAdapter", "View=" + v.getTag());
                 AdapterView.OnItemClickListener listener = listView.getOnItemClickListener();
                 long id = getItemId(position);
                 listener.onItemClick((AdapterView<?>) parent, v, position, id);
