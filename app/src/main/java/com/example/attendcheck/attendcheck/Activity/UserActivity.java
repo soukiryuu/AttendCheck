@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
+import com.example.attendcheck.attendcheck.GetterSetterClass.TuitionTime;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
 import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
@@ -334,17 +335,18 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         query1.findInBackground(new FindCallback<NCMBObject>() {
             @Override
             public void done(List<NCMBObject> list, NCMBException e) {
-                obj = new NCMBObject("Pre_Absence");
-                obj = list.get(0);
-                obj.setObjectId(obj.getObjectId());
-                x = obj.getInt("presence");
-                y = obj.getInt("absence");
-                z = (double)x + y;
-                rate = (double)((x/z)*100);
-                rate = Math.round(rate);
-                DecimalFormat df =  new DecimalFormat("###.#");
-                obj.put("attend_rate", df.format(rate));
-                obj.saveInBackground(null);
+                TuitionTime tuitionTime = new TuitionTime();
+//                obj = new NCMBObject("Pre_Absence");
+//                obj = list.get(0);
+//                obj.setObjectId(obj.getObjectId());
+//                x = obj.getInt("presence");
+//                y = obj.getInt("absence");
+//                z = (double)x + y;
+//                rate = (double)((x/z)*100);
+//                rate = Math.round(rate);
+//                DecimalFormat df =  new DecimalFormat("###.#");
+//                obj.put("attend_rate", df.format(rate));
+//                obj.saveInBackground(null);
             }
         });
     }
