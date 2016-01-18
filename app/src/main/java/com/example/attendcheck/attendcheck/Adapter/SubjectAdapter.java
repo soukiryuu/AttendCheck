@@ -57,6 +57,7 @@ public class SubjectAdapter extends BaseAdapter {
 
         ((TextView)convertView.findViewById(R.id.subjname)).setText(subjlist.get(position).getSubjectName());
         ((TextView)convertView.findViewById(R.id.attendrate)).setText(Integer.toString(subjlist.get(position).getAttendRate()));
+        ((TextView)convertView.findViewById(R.id.classroom)).setText(subjlist.get(position).getClassRoom());
 
         Button button = (Button) convertView.findViewById(R.id.attendbtn);
         String subject_ID = subjlist.get(position).getSubjectId();

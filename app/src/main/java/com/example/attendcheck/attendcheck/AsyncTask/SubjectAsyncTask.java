@@ -99,6 +99,8 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
             for (NCMBObject s: sbj_name) {
                 subject = new Subject();
                 subject.setSubjectName(s.getString("subject_name"));
+                subject.setSubjectId(s.getString("subject_id"));
+                subject.setClassRoom(s.getString("classroom_name"));
                 subjectName = s.getString("subject_name");
                 subject_idStr = s.getString("subject_id");
 //                object_idStr = s.getObjectId();
@@ -140,6 +142,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
                 subject = new Subject();
                 subject.setSubjectName(s.getString("subject_name"));
                 subject.setSubjectId(s.getString("subject_id"));
+                subject.setClassRoom(s.getString("classroom_name"));
                 subjectName = s.getString("subject_name");
                 subject_idStr = s.getString("subject_id");
 //                object_idStr = s.getObjectId();
@@ -213,12 +216,13 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
         return dWeekStr;
     }
 
-    public int getAttendRate (String subjectId) {
+    public int getAttendRate(String subjectId) {
         Log.d(TAG, "getAttendRate");
         NCMBQuery<NCMBObject> query3 = new NCMBQuery<>("Pre_Absence");
         query3.whereEqualTo("student_id", LoginUser.getObjectId());
         query3.whereEqualTo("subject_id", subjectId);
-        query3.whereGreaterThanOrEqualTo("attend_rate", 0);
+        query3.whereEqualTo("subject_name", subjectName);
+//        query3.whereGreaterThanOrEqualTo("attend_rate", 0);
         NCMBQuery<NCMBObject> query4 = new NCMBQuery<>("Subject");
         query4.whereEqualTo("subject_name", subjectName);
         try {
@@ -231,6 +235,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
 //                obj.setObjectId(LoginUser.getObjectId());
                 obj.put("student_pointer", NCMBUser.getCurrentUser());
                 obj.put("student_id", LoginUser.getObjectId());
+                obj.put("subject_name", subjectName);
                 obj.put("subject_id", subject_idStr);
                 obj2 = new NCMBObject("Subject");
                 obj2 = sbjName.get(0);

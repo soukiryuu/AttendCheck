@@ -2,6 +2,7 @@ package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,9 +31,11 @@ import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBRole;
 import com.nifty.cloud.mb.core.NCMBUser;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 
 
 /**
@@ -50,6 +53,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     public SubjectAdapter adapter;
     private NCMBObject obj,obj2;
     public Subject sbj;
+    public int x,y;
+    public double z,rate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,13 +270,13 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         adapter.setSubjlist(result);
         subjList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                 Log.d("ItemClick", "Position=" + String.valueOf(position));
                 Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
                 NCMBQuery<NCMBObject> query = new NCMBQuery<>("Pre_Absence");
                 query.whereEqualTo("student_id", LoginUser.getObjectId());
                 Log.d("UserActivity1", LoginUser.getObjectId());
-//                query.whereEqualTo("subject_id", sbj.getSubjectId());
+                query.whereEqualTo("subject_id", view.getTag());
                 query.findInBackground(new FindCallback<NCMBObject>() {
                     @Override
                     public void done(List<NCMBObject> list, NCMBException e) {
@@ -281,6 +286,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                         Log.d("UserActivity2",obj.getObjectId().toString());
                         try {
                             obj.increment("presence", 1);
+                            obj.saveInBackground(null);
+                            AttendRate(view.getTag());
                         } catch (NCMBException e1) {
                             e1.printStackTrace();
                         }
@@ -318,5 +325,27 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             startService(new Intent(this, LocationService.class));
             Toast.makeText(getApplicationContext(), "GPSはONです。", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void AttendRate(Object tag) {
+        NCMBQuery<NCMBObject> query1 = new NCMBQuery<>("Pre_Absence");
+        query1.whereEqualTo("student_id", LoginUser.getObjectId());
+        query1.whereEqualTo("subject_id", tag);
+        query1.findInBackground(new FindCallback<NCMBObject>() {
+            @Override
+            public void done(List<NCMBObject> list, NCMBException e) {
+                obj = new NCMBObject("Pre_Absence");
+                obj = list.get(0);
+                obj.setObjectId(obj.getObjectId());
+                x = obj.getInt("presence");
+                y = obj.getInt("absence");
+                z = (double)x + y;
+                rate = (double)((x/z)*100);
+                rate = Math.round(rate);
+                DecimalFormat df =  new DecimalFormat("###.#");
+                obj.put("attend_rate", df.format(rate));
+                obj.saveInBackground(null);
+            }
+        });
     }
 }

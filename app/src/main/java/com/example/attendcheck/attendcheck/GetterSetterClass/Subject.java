@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 public class Subject {
     long id;
-    String subjectName,subjectId;
+    String subjectName,subjectId,classRoom;
     int attendRate;
 
     public long getId() {
@@ -45,6 +45,14 @@ public class Subject {
     public void setSubjectId(String subjectId) {
         this.subjectId = subjectId;
         Log.d("Subject", "subject_id =" + subjectId.toString());
+    }
+
+    public String getClassRoom() {
+        return classRoom;
+    }
+
+    public void setClassRoom(String classRoom) {
+        this.classRoom = classRoom;
     }
 
     public void ShowLogInfo(String messeage){
