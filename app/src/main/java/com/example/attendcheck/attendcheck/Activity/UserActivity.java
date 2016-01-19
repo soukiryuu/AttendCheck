@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -54,8 +55,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     public SubjectAdapter adapter;
     private NCMBObject obj,obj2;
     public Subject sbj;
-    public int x,y;
-    public double z,rate;
+    public TuitionTime tuitionTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,28 +272,10 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         subjList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                Log.d("ItemClick", "Position=" + String.valueOf(position));
+                tuitionTime = new TuitionTime(view.getTag(),LoginUser.getObjectId());
+//                Log.d("ItemClick", "Position=" + String.valueOf(position));
                 Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
-                NCMBQuery<NCMBObject> query = new NCMBQuery<>("Pre_Absence");
-                query.whereEqualTo("student_id", LoginUser.getObjectId());
-                Log.d("UserActivity1", LoginUser.getObjectId());
-                query.whereEqualTo("subject_id", view.getTag());
-                query.findInBackground(new FindCallback<NCMBObject>() {
-                    @Override
-                    public void done(List<NCMBObject> list, NCMBException e) {
-                        obj = new NCMBObject("Pre_Absence");
-                        obj = list.get(0);
-                        obj.setObjectId(obj.getObjectId());
-                        Log.d("UserActivity2",obj.getObjectId().toString());
-                        try {
-                            obj.increment("presence", 1);
-                            obj.saveInBackground(null);
-                            AttendRate(view.getTag());
-                        } catch (NCMBException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                });
+                Log.d("UserActivity", "TuitionTime.flg = " + tuitionTime.flg);
             }
         });
         subjList.setAdapter(adapter);
@@ -326,28 +308,5 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             startService(new Intent(this, LocationService.class));
             Toast.makeText(getApplicationContext(), "GPSはONです。", Toast.LENGTH_LONG).show();
         }
-    }
-
-    public void AttendRate(Object tag) {
-        NCMBQuery<NCMBObject> query1 = new NCMBQuery<>("Pre_Absence");
-        query1.whereEqualTo("student_id", LoginUser.getObjectId());
-        query1.whereEqualTo("subject_id", tag);
-        query1.findInBackground(new FindCallback<NCMBObject>() {
-            @Override
-            public void done(List<NCMBObject> list, NCMBException e) {
-                TuitionTime tuitionTime = new TuitionTime();
-//                obj = new NCMBObject("Pre_Absence");
-//                obj = list.get(0);
-//                obj.setObjectId(obj.getObjectId());
-//                x = obj.getInt("presence");
-//                y = obj.getInt("absence");
-//                z = (double)x + y;
-//                rate = (double)((x/z)*100);
-//                rate = Math.round(rate);
-//                DecimalFormat df =  new DecimalFormat("###.#");
-//                obj.put("attend_rate", df.format(rate));
-//                obj.saveInBackground(null);
-            }
-        });
     }
 }
