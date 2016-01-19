@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
+import com.example.attendcheck.attendcheck.OtherClass.PeriodTime_Subject;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;

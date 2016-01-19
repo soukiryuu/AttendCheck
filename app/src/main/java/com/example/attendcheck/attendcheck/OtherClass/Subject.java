@@ -1,9 +1,6 @@
-package com.example.attendcheck.attendcheck.GetterSetterClass;
+package com.example.attendcheck.attendcheck.OtherClass;
 
-import android.nfc.Tag;
 import android.util.Log;
-
-import java.lang.annotation.Target;
 
 /**
  * Created by watanabehiroaki on 2015/11/26.

@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
+import com.example.attendcheck.attendcheck.OtherClass.Subject;
 import com.nifty.cloud.mb.core.DoneCallback;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;

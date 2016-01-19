@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.attendcheck.attendcheck.R;
-import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
+import com.example.attendcheck.attendcheck.OtherClass.Subject;
 
 import java.util.ArrayList;
 

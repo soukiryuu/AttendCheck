@@ -1,21 +1,15 @@
-package com.example.attendcheck.attendcheck.GetterSetterClass;
+package com.example.attendcheck.attendcheck.OtherClass;
 
-import android.nfc.Tag;
 import android.util.Log;
-import android.view.View;
 
 import com.nifty.cloud.mb.core.FindCallback;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
-import com.nifty.cloud.mb.core.NCMBUser;
 
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,38 +51,44 @@ public class TuitionTime {
         nowofTime = Calendar.getInstance();
         sa_Time = Calendar.getInstance();
 
-        start_period = new Calendar[start_hour.length];
-        end_period = new Calendar[end_hour.length];
-        attend_period = new Calendar[start_hour.length];
+        SetPeriodTime setPeriodTime = new SetPeriodTime();
+        Calendar cal = setPeriodTime.start_period[0];
 
-        for (int i=0; i < start_hour.length; i++) {
-            start_period[i] = Calendar.getInstance();
-            start_period[i].set(Calendar.HOUR_OF_DAY,start_hour[i]);
-            if (i < 3) {
-                start_period[i].set(Calendar.MINUTE, start_minute[0]);
-            }else {
-                start_period[i].set(Calendar.MINUTE, start_minute[1]);
-            }
-            start_period[i].set(Calendar.SECOND, start_second);
+//        setPeriodTime.start_period[0];
 
-            end_period[i] = Calendar.getInstance();
-            end_period[i].set(Calendar.HOUR_OF_DAY,end_hour[i]);
-            if (i < 3) {
-                end_period[i].set(Calendar.MINUTE, end_minute[0]);
-            }else {
-                end_period[i].set(Calendar.MINUTE, end_minute[1]);
-            }
-            end_period[i].set(Calendar.SECOND, start_second);
 
-            attend_period[i] = Calendar.getInstance();
-            attend_period[i].set(Calendar.HOUR_OF_DAY,start_hour[i]);
-            if (i < 3) {
-                attend_period[i].set(Calendar.MINUTE, end_minute[0]);
-            }else {
-                attend_period[i].set(Calendar.MINUTE, end_minute[1]);
-            }
-            attend_period[i].set(Calendar.SECOND, start_second);
-        }
+//        start_period = new Calendar[start_hour.length];
+//        end_period = new Calendar[end_hour.length];
+//        attend_period = new Calendar[start_hour.length];
+//
+//        for (int i=0; i < start_hour.length; i++) {
+//            start_period[i] = Calendar.getInstance();
+//            start_period[i].set(Calendar.HOUR_OF_DAY,start_hour[i]);
+//            if (i < 3) {
+//                start_period[i].set(Calendar.MINUTE, start_minute[0]);
+//            }else {
+//                start_period[i].set(Calendar.MINUTE, start_minute[1]);
+//            }
+//            start_period[i].set(Calendar.SECOND, start_second);
+//
+//            end_period[i] = Calendar.getInstance();
+//            end_period[i].set(Calendar.HOUR_OF_DAY,end_hour[i]);
+//            if (i < 3) {
+//                end_period[i].set(Calendar.MINUTE, end_minute[0]);
+//            }else {
+//                end_period[i].set(Calendar.MINUTE, end_minute[1]);
+//            }
+//            end_period[i].set(Calendar.SECOND, start_second);
+//
+//            attend_period[i] = Calendar.getInstance();
+//            attend_period[i].set(Calendar.HOUR_OF_DAY,start_hour[i]);
+//            if (i < 3) {
+//                attend_period[i].set(Calendar.MINUTE, end_minute[0]);
+//            }else {
+//                attend_period[i].set(Calendar.MINUTE, end_minute[1]);
+//            }
+//            attend_period[i].set(Calendar.SECOND, start_second);
+//        }
 
         a.set(Calendar.HOUR_OF_DAY,11);
         a.set(Calendar.MINUTE, 00);
@@ -111,7 +111,8 @@ public class TuitionTime {
 //        sa_minute = Integer.parseInt(s[1]);
         Log.d(TAG, String.valueOf(nowofTime.before(start_period[2])));
 
-        gethour();
+        flg = false;
+//        gethour();
 //        Log.d(TAG, String.valueOf(sa_minute));
         Log.d(TAG, String.valueOf(start_period[0].get(Calendar.MINUTE)));
         return flg;

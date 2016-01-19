@@ -1,4 +1,4 @@
-package com.example.attendcheck.attendcheck.GetterSetterClass;
+package com.example.attendcheck.attendcheck.OtherClass;
 
 import android.util.Log;
 

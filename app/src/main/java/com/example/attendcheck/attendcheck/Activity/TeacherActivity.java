@@ -5,36 +5,29 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.attendcheck.attendcheck.Adapter.Period_Time_Adapter;
 import com.example.attendcheck.attendcheck.AsyncTask.PeriodTimeAsyncTask;
-import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
-import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
+import com.example.attendcheck.attendcheck.OtherClass.PeriodTime_Subject;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
 import com.nifty.cloud.mb.core.DoneCallback;
 import com.nifty.cloud.mb.core.FindCallback;
-import com.nifty.cloud.mb.core.NCMBBase;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
 import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBUser;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

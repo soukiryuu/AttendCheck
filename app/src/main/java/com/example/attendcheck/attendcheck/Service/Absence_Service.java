@@ -1,8 +1,12 @@
 package com.example.attendcheck.attendcheck.Service;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.nifty.cloud.mb.core.FindCallback;
@@ -15,6 +19,10 @@ import java.util.List;
 
 public class Absence_Service extends Service {
 
+    public interface SendAbsenceCallback {
+        public void onAbsenceTaskChecked(boolean flg);
+    }
+
     final String TAG = "Absence_Service";
     public Object view;
     public String objectId;
@@ -22,6 +30,9 @@ public class Absence_Service extends Service {
     public boolean flg = false;
     public int x,y;
     public double z,rate;
+    private SendAbsenceCallback callback = null;
+
+    public Absence_Service(){};
 
     public Absence_Service(Object view, String objectId) {
         Log.d(TAG, "view = " + view);
@@ -43,7 +54,7 @@ public class Absence_Service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        ShowLogInfo("サービス起動");
+        ShowLogInfo("Absence_Service起動");
         Absence_Check();
 //        return super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;
@@ -53,7 +64,7 @@ public class Absence_Service extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        ShowLogInfo("LocationServiceのonDestroy");
+        ShowLogInfo("Absence_ServiceのonDestroy");
     }
 
     public void Absence_Check() {
@@ -76,6 +87,7 @@ public class Absence_Service extends Service {
                     e1.printStackTrace();
                     flg = false;
                 }
+                callback.onAbsenceTaskChecked(flg);
             }
         });
     }
@@ -100,6 +112,23 @@ public class Absence_Service extends Service {
                 obj.saveInBackground(null);
             }
         });
+    }
+
+    public static void startAlarm(Context context) {
+        // 実行するサービスを指定する
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+                new Intent(context, Absence_Service.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // 10秒毎にサービスの処理を実行する
+        AlarmManager am = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(), 10 * 1000, pendingIntent);
+    }
+
+    private void addSendAbsenceCallback(SendAbsenceCallback callback) {
+        this.callback = callback;
     }
 
     public void ShowLogInfo(String messeage){

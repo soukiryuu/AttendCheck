@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.attendcheck.attendcheck.GetterSetterClass.PeriodTime_Subject;
+import com.example.attendcheck.attendcheck.OtherClass.PeriodTime_Subject;
 import com.example.attendcheck.attendcheck.R;
-import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
 
 import java.util.ArrayList;
 

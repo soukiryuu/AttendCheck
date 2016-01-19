@@ -2,11 +2,9 @@ package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -20,24 +18,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
-import com.example.attendcheck.attendcheck.GetterSetterClass.TuitionTime;
+import com.example.attendcheck.attendcheck.OtherClass.TuitionTime;
+import com.example.attendcheck.attendcheck.Service.Absence_Service;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
-import com.example.attendcheck.attendcheck.GetterSetterClass.Subject;
+import com.example.attendcheck.attendcheck.OtherClass.Subject;
 import com.example.attendcheck.attendcheck.Adapter.SubjectAdapter;
 import com.nifty.cloud.mb.core.DoneCallback;
-import com.nifty.cloud.mb.core.FindCallback;
 import com.nifty.cloud.mb.core.NCMBException;
 import com.nifty.cloud.mb.core.NCMBObject;
-import com.nifty.cloud.mb.core.NCMBQuery;
 import com.nifty.cloud.mb.core.NCMBRole;
 import com.nifty.cloud.mb.core.NCMBUser;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
 
 
 /**
@@ -62,6 +56,10 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
+        //AlarmManager開始
+        Absence_Service.startAlarm(getApplicationContext());
+
+        //GPSの判断
         GPSSerch();
 
         LoginUser = NCMBUser.getCurrentUser();
@@ -276,6 +274,9 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
 //                Log.d("ItemClick", "Position=" + String.valueOf(position));
                 Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
                 Log.d("UserActivity", "TuitionTime.flg = " + tuitionTime.flg);
+                if ( tuitionTime.flg == false) {
+                    startService(new Intent(UserActivity.this, Absence_Service.class));
+                }
             }
         });
         subjList.setAdapter(adapter);
