@@ -25,6 +25,7 @@ public class MyReceiver extends BroadcastReceiver {
         }
 
         // AlarmManager を開始する
-        Absence_Service.startAlarm(context);
+//        Absence_Service absence_service = new Absence_Service();
+        Absence_Service.setAlarmTime(context);
     }
 }

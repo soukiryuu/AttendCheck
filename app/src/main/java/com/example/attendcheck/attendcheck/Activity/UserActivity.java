@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.attendcheck.attendcheck.AsyncTask.SubjectAsyncTask;
 import com.example.attendcheck.attendcheck.OtherClass.TuitionTime;
+import com.example.attendcheck.attendcheck.Service.Absence_AlarmManager;
 import com.example.attendcheck.attendcheck.Service.Absence_Service;
 import com.example.attendcheck.attendcheck.Service.LocationService;
 import com.example.attendcheck.attendcheck.R;
@@ -32,6 +33,7 @@ import com.nifty.cloud.mb.core.NCMBUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 
 /**
@@ -50,6 +52,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     private NCMBObject obj,obj2;
     public Subject sbj;
     public TuitionTime tuitionTime;
+    public int now_hour,now_minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,14 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         setContentView(R.layout.activity_user);
 
         //AlarmManager開始
-        Absence_Service.startAlarm(getApplicationContext());
-
+//        Absence_Service absence_service = new Absence_Service();
+//        Absence_Service.setAlarmTime(getApplicationContext());
+        Calendar now_cal = Calendar.getInstance();
+        now_hour = now_cal.get(Calendar.HOUR_OF_DAY);
+        now_minute = now_cal.get(Calendar.MINUTE);
+        now_cal.get(Calendar.SECOND);
+        Absence_AlarmManager absence_alarmManager = new Absence_AlarmManager(this);
+        absence_alarmManager.addAlarm(now_hour,now_minute);
         //GPSの判断
         GPSSerch();
 
@@ -226,6 +235,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
 //                startActivity(intent3);
                 ShowLogInfo("ログアウト");
                 stopService(new Intent(UserActivity.this, LocationService.class));
+                stopService(new Intent(UserActivity.this, Absence_Service.class));
                 finish();
             }
         });
@@ -276,6 +286,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                 Log.d("UserActivity", "TuitionTime.flg = " + tuitionTime.flg);
                 if ( tuitionTime.flg == false) {
                     startService(new Intent(UserActivity.this, Absence_Service.class));
+                }else {
+                    Toast.makeText(getApplicationContext(), "出欠確認済みです。", Toast.LENGTH_LONG).show();
                 }
             }
         });

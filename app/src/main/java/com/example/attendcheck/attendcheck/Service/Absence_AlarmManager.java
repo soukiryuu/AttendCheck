@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ public class Absence_AlarmManager {
         Log.v(TAG,"初期化完了");
     }
 
-    public void addAlarm(int alarmHour, int alarmMinute){
+    public void addAlarm(int am_hour,int am_minute){
         // アラームを設定する
         mAlarmSender = this.getPendingIntent();
 
@@ -35,17 +36,20 @@ public class Absence_AlarmManager {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
         // 設定した時刻をカレンダーに設定
-        cal.set(Calendar.HOUR_OF_DAY, alarmHour);
-        cal.set(Calendar.MINUTE, alarmMinute);
+        cal.set(Calendar.HOUR_OF_DAY, am_hour);
+        cal.set(Calendar.MINUTE, am_minute);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
         // 過去だったら明日にする
         if(cal.getTimeInMillis() < System.currentTimeMillis()){
+            Log.d(TAG, "明日に設定");
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
-        Toast.makeText(c, String.format("%02d時%02d分に起こします", alarmHour, alarmMinute), Toast.LENGTH_LONG).show();
+//        Toast.makeText(c, String.format("%02d時%02d分に起こします", alarmHour, alarmMinute), Toast.LENGTH_LONG).show();
         am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), mAlarmSender);
+//        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                SystemClock.elapsedRealtime(), cal.getTimeInMillis(), mAlarmSender);
         Log.d(TAG, cal.getTimeInMillis()+"ms");
         Log.d(TAG, "アラームセット完了");
     }
