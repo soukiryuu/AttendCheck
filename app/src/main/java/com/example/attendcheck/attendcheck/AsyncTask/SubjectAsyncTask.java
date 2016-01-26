@@ -55,7 +55,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
         dialog = new ProgressDialog(activity);
         dialog.setTitle("処理中");
         dialog.setMessage("データを取得中です。");
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(true);
         dialog.setOnCancelListener(this);
         dialog.setMax(100);
@@ -244,6 +244,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
                 obj.put("absence", 0);
                 obj.put("presence", 0);
                 obj.put("attend_rate", 0);
+                obj.put("check_flg",false);
                 obj.saveInBackground(new DoneCallback() {
                     @Override
                     public void done(NCMBException e) {

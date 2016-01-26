@@ -6,13 +6,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.*;
 import android.location.Location;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 public class LocationService extends Service implements LocationListener{
 
+    private String TAG = "LocationService";
     private LocationManager manager;
+    public double latitude,longitude;
+
 
     public LocationService() {
     }
@@ -39,9 +43,16 @@ public class LocationService extends Service implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
         float accuracy = location.getAccuracy();
         Log.d("TAG", String.valueOf(accuracy));
         Log.d("TAG", String.valueOf(location.getAltitude()));
+
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.putExtra("Latitude", location.getLatitude());
+        broadcastIntent.setAction("UPDATE_ACTION");
+        getBaseContext().sendBroadcast(broadcastIntent);
     }
 
     @Override

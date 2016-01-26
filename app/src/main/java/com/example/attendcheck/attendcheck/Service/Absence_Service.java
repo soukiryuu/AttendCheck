@@ -63,6 +63,7 @@ public class Absence_Service extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         ShowLogInfo("Absence_Service起動");
+//        String sId = intent.getStringExtra("SubjectID",a);
         Absence_Check();
 //        return super.onStartCommand(intent, flags, startId);
         return START_NOT_STICKY;

@@ -60,11 +60,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
-                <!--<data-->
-                    <!--android:path="jp.inujirushi.android.sample"-->
-                    <!--android:scheme="package" />-->
+                <!-- <data -->
+                <!-- android:path="jp.inujirushi.android.sample" -->
+                <!-- android:scheme="package" /> -->
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".BroadcastReceiver.LocationReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
+
+        <service
+            android:name=".Service.FlgChangeService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

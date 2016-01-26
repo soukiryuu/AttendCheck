@@ -47,7 +47,7 @@ public class PeriodTimeAsyncTask extends AsyncTask<String, Integer, ArrayList<Pe
         dialog = new ProgressDialog(activity);
         dialog.setTitle("処理中");
         dialog.setMessage("データを取得中です。");
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(true);
         dialog.setOnCancelListener(this);
         dialog.setMax(100);
