@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,13 +60,14 @@ public class SubjectAdapter extends BaseAdapter {
         ((TextView)convertView.findViewById(R.id.attendrate)).setText(Integer.toString(subjlist.get(position).getAttendRate()));
         ((TextView)convertView.findViewById(R.id.classroom)).setText(subjlist.get(position).getClassRoom());
 
-        Button button = (Button) convertView.findViewById(R.id.attendbtn);
+//        Button button = (Button) convertView.findViewById(R.id.attendbtn);
+        ImageView attendview = (ImageView) convertView.findViewById(R.id.attendbtn);
         String subject_ID = subjlist.get(position).getSubjectId();
 //        button.setTag(position);
-        button.setTag(subject_ID);
+        attendview.setTag(subject_ID);
 
         final ListView listView = (ListView) parent;
-        button.setOnClickListener(new View.OnClickListener() {
+        attendview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("SubjectAdapter", "ボタンが押された");

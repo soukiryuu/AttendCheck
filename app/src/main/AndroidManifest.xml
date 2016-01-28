@@ -35,6 +35,8 @@
         </activity>
         <activity android:name=".Activity.TeacherActivity" >
         </activity>
+        <activity android:name=".Activity.EditActivity" >
+        </activity>
 
         <service
             android:name=".Service.LocationService"

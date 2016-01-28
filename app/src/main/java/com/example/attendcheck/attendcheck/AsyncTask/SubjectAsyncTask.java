@@ -245,6 +245,7 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
                 obj.put("presence", 0);
                 obj.put("attend_rate", 0);
                 obj.put("check_flg",false);
+                obj.put("pa_num", 0);
                 obj.saveInBackground(new DoneCallback() {
                     @Override
                     public void done(NCMBException e) {

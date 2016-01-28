@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -38,7 +39,8 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
     private String TAG = "TeacherActivity";
     private NCMBUser LoginUser;
     private NCMBObject object,object2;
-    private Button Logoutbtn, periodbtn;
+//    private Button Logoutbtn, periodbtn, Editbtn;
+    public ImageView Logoutbtn, periodbtn, Editbtn;
     private boolean flg;
     public Spinner spinner, dayWeekSpinner, periodTimeSpinner, classroomSpinner;
     public Period_Time_Adapter period_time_adapter;
@@ -106,8 +108,8 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         dayWeekSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner spinner = (Spinner)parent;
-                String dayweek = (String)spinner.getSelectedItem();
+                Spinner spinner = (Spinner) parent;
+                String dayweek = (String) spinner.getSelectedItem();
                 Log.d("TeacherActivityの曜日", dayweek);
             }
 
@@ -151,7 +153,7 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
         });
 
 
-        Logoutbtn = (Button) findViewById(R.id.logoutbtn);
+        Logoutbtn = (ImageView) findViewById(R.id.logoutbtn);
         Logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +161,20 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
             }
         });
 
-        periodbtn = (Button)findViewById(R.id.periodBtn);
+        Editbtn = (ImageView) findViewById(R.id.t_accountedit);
+        Editbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowLogInfo("Editbtnが押された");
+
+                Intent edit_intent = new Intent(TeacherActivity.this, EditActivity.class);
+                edit_intent.putExtra("LoginUser", LoginUser.getObjectId());
+//                startActivity(edit_intent);
+                startActivityForResult(edit_intent, 1);
+            }
+        });
+
+        periodbtn = (ImageView)findViewById(R.id.periodBtn);
         periodbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -336,5 +351,21 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    if (data != null){
+                        finish();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

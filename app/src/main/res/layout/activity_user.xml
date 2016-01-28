@@ -28,19 +28,20 @@
         android:layout_height="wrap_content"
         android:gravity="right">
 
-        <Button
+        <ImageView
             android:id="@+id/logoutbtn"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ログアウト"/>
+            android:src="@drawable/logoutbtn"/>
 
-        <Button
+        <ImageView
             android:id="@+id/accountedit"
+            android:layout_marginLeft="20dp"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="アカウント編集"/>
+            android:src="@drawable/accounteditbtn"/>
 
     </LinearLayout>
 

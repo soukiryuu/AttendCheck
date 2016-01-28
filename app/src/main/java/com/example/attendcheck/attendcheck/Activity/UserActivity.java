@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     private NCMBUser LoginUser;
     public String mailAddress, subjname;
     private boolean flg;
-    private Button Logoutbtn, Editbtn, PAbtn;
+    private Button PAbtn;
+    public ImageView Editbtn,Logoutbtn;
     public ListView subjList;
     public static SubjectAsyncTask sbjAsync;
     private Context context;
@@ -151,7 +153,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         sbjAsync = new SubjectAsyncTask(this, context, this);
         sbjAsync.execute(subjname);
 
-        Logoutbtn = (Button) findViewById(R.id.logoutbtn);
+        Logoutbtn = (ImageView) findViewById(R.id.logoutbtn);
         Logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,55 +161,16 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             }
         });
 
-        Editbtn = (Button) findViewById(R.id.accountedit);
+        Editbtn = (ImageView) findViewById(R.id.accountedit);
         Editbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ShowLogInfo("Editbtnが押された");
-//                locationReceiver = new LocationReceiver();
-//                intentFilter = new IntentFilter();
-//                intentFilter.addAction("UPDATE_ACTION");
-//                registerReceiver(locationReceiver, intentFilter);
-//
-//                Handler updateHandler = new Handler() {
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//
-//                        Bundle bundle = msg.getData();
-//                        double latitude = bundle.getDouble("Latitude");
-//
-//                        Log.d("UserActivity", String.valueOf(latitude));
-//
-//                    }
-//                };
 
-
-//                NCMBQuery<NCMBObject> queryA = new NCMBQuery<>("Subject");
-//                queryA.whereEqualTo("subject_name", "Objective-C");
-//                queryA.findInBackground(new FindCallback<NCMBObject>() {
-//                    @Override
-//                    public void done(List<NCMBObject> list, NCMBException e) {
-//                        if (e != null) {
-//
-//                        }else {
-//                            obj2 = list.get(0);
-//
-//                            obj = new NCMBObject("Pre_Absence");
-////                            obj.fetchInBackground();
-//                            obj.setObjectId("47jmmCb4E5CnVmDA");
-//                            obj.put("student_id", LoginUser.getObjectId());
-//                            obj.put("student_pointer", NCMBUser.getCurrentUser());
-////                            obj.put("sbjPA", Arrays.asList(obj2.getString("subject_name"),1));
-//                            obj.saveInBackground(null);
-//                            try {
-//                                obj.save();
-//
-//                            } catch (NCMBException ex) {
-//                                ex.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                });
+                Intent edit_intent = new Intent(UserActivity.this, EditActivity.class);
+                edit_intent.putExtra("LoginUser", LoginUser.getObjectId());
+//                startActivity(edit_intent);
+                startActivityForResult(edit_intent,1);
             }
         });
     }
@@ -285,7 +248,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         subjList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
+//                tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
                 if (((37.39300 <= lat) && (lat <= 37.39452)) && ((140.39000 <= lon) && (lon <= 140.39141))) {
                     Log.d("UserActivity", "latOK");
                     tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
@@ -305,6 +268,12 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                         AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
                         dialog.setMessage("今期の授業日数に達しているため、出欠できません。")
                                 .setTitle("出欠エラー")
+                                .setNegativeButton("OK", null);
+                        dialog.create().show();
+                    }else {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
+                        dialog.setMessage("この時間の出欠確認が完了しました。")
+                                .setTitle("出欠完了")
                                 .setNegativeButton("OK", null);
                         dialog.create().show();
                     }
@@ -373,5 +342,22 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    if (data != null){
+                        manager.removeUpdates(this);
+                        finish();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

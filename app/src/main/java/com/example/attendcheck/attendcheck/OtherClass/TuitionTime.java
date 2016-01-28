@@ -227,66 +227,63 @@ public class TuitionTime {
             query.whereEqualTo("student_id", objectId);
             query.whereEqualTo("subject_id", view);
 //        query.whereEqualTo("check_flg", false);
-            query.findInBackground(new FindCallback<NCMBObject>() {
-                @Override
-                public void done(List<NCMBObject> list, NCMBException e) {
-                    if (list.size() == 0) {
-                        pa_flg = true;
-                    } else {
-                        obj = new NCMBObject("Pre_Absence");
-                        obj = list.get(0);
-                        obj.setObjectId(obj.getObjectId());
-                        Log.d(TAG, obj.getObjectId().toString());
-                        if (pa_flg == true) {
-                            try {
-                                obj.increment("presence", 1);
-                                obj.put("check_flg", true);
-                                obj.saveInBackground(new DoneCallback() {
-                                    @Override
-                                    public void done(NCMBException e) {
-                                        if (e != null) {
-                                            e.printStackTrace();
-                                            //エラー発生時の処理
-                                        } else {
+            try {
+                List<NCMBObject> list2 = query.find();
+                for (NCMBObject a: list2) {
+                    obj = new NCMBObject("Pre_Absence");
+                    Log.d(TAG, a.getObjectId());
+                    obj = list2.get(0);
+                    obj.setObjectId(obj.getObjectId());
 
-                                            //成功時の処理
-                                        }
-                                    }
-                                });
-                                AttendRate(view);
-                                flg = true;
-                            } catch (NCMBException e1) {
-                                e1.printStackTrace();
-//                        flg = false;
-                            }
-                        } else if (pa_flg == false){
-                            try {
-                                obj.increment("absence", 1);
-                                obj.put("check_flg", true);
-                                obj.saveInBackground(new DoneCallback() {
-                                    @Override
-                                    public void done(NCMBException e) {
-                                        if (e != null) {
-                                            e.printStackTrace();
-                                            //エラー発生時の処理
-                                        } else {
+                    if (pa_flg == true) {
+                        try {
+                            obj.increment("presence", 1);
+                            obj.put("check_flg", true);
+                            obj.saveInBackground(new DoneCallback() {
+                                @Override
+                                public void done(NCMBException e) {
+                                    if (e != null) {
+                                        e.printStackTrace();
+                                        //エラー発生時の処理
+                                    } else {
 
-                                            //成功時の処理
-                                        }
+                                        //成功時の処理
                                     }
-                                });
-                                AttendRate(view);
-                                flg = true;
-                            } catch (NCMBException e1) {
-                                e1.printStackTrace();
+                                }
+                            });
+                            AttendRate(view);
+                            flg = true;
+                        } catch (NCMBException e1) {
+                            e1.printStackTrace();
 //                        flg = false;
-                            }
                         }
+                    } else if (pa_flg == false){
+                        try {
+                            obj.increment("absence", 1);
+                            obj.put("check_flg", true);
+                            obj.saveInBackground(new DoneCallback() {
+                                @Override
+                                public void done(NCMBException e) {
+                                    if (e != null) {
+                                        e.printStackTrace();
+                                        //エラー発生時の処理
+                                    } else {
 
+                                        //成功時の処理
+                                    }
+                                }
+                            });
+                            AttendRate(view);
+                            flg = true;
+                        } catch (NCMBException e1) {
+                            e1.printStackTrace();
+//                        flg = false;
+                        }
                     }
-
                 }
-            });
+            }catch (NCMBException error3) {
+                error3.printStackTrace();
+            }
         }else if (pz >= n){
             Log.d(TAG,"NG");
 //                    flg = false;
