@@ -369,6 +369,13 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    if (data != null){
+                        finish();
+                    }
+                }
+                break;
             case 2:
                 if (resultCode == RESULT_OK) {
                     if (data != null){

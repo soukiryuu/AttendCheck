@@ -48,33 +48,44 @@ public class SignUp_Teacher_Activity extends Activity {
                 mailAddress = mEmail.getText().toString();
 
 
-                user.signUpInBackground(new DoneCallback() {
-                    @Override
-                    public void done(NCMBException e) {
-                        if (e == null) {
-                            // Sign up 成功！
-                            Toast.makeText(getApplication(), "ユーザー登録成功！", Toast.LENGTH_SHORT).show();
-                            AlertDialog.Builder dialog = new AlertDialog.Builder(SignUp_Teacher_Activity.this);
-                            dialog.setMessage("登録したアドレスにメールが送信されますので、メール内のURLからアドレスの登録の完了をしてください。" +
-                                    "\n登録を完了しないと次回のログインが出来ません。")
-                                    .setTitle("まだ登録は完了していません。")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent(SignUp_Teacher_Activity.this, TeacherActivity.class);
-                                            intent.putExtra("mailaddress", mailAddress);
-                                            intent.putExtra("flag", true);
-                                            startActivity(intent);
-                                        }
-                                    });
-                            dialog.create().show();
-                        } else {
-                            // Sign up 失敗！
-                            Toast.makeText(getApplication(), "失敗！", Toast.LENGTH_SHORT).show();
-                            Log.d("登録失敗", e.getMessage());
+                if ((mUserName.getText().toString().equals("")) &&
+                        (mEmail.getText().toString().equals("")) &&
+                        (mPassword.getText().toString().equals(""))) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(SignUp_Teacher_Activity.this);
+                    dialog.setMessage("全ての項目に入力してください。")
+                            .setTitle("登録エラーです")
+                            .setPositiveButton("OK",null);
+                    dialog.create().show();
+                }else {
+                    user.signUpInBackground(new DoneCallback() {
+                        @Override
+                        public void done(NCMBException e) {
+                            if (e == null) {
+                                // Sign up 成功！
+                                Toast.makeText(getApplication(), "ユーザー登録成功！", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(SignUp_Teacher_Activity.this);
+                                dialog.setMessage("登録したアドレスにメールが送信されますので、メール内のURLからアドレスの登録の完了をしてください。" +
+                                        "\n登録を完了しないと次回のログインが出来ません。")
+                                        .setTitle("まだ登録は完了していません。")
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = new Intent(SignUp_Teacher_Activity.this, TeacherActivity.class);
+                                                intent.putExtra("mailaddress",mailAddress);
+                                                intent.putExtra("flag",true);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                dialog.create().show();
+                            } else {
+                                // Sign up 失敗！
+                                Toast.makeText(getApplication(), "失敗！", Toast.LENGTH_SHORT).show();
+                                Log.d("登録失敗", e.getMessage());
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
     }
