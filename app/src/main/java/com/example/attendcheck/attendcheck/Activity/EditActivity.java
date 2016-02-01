@@ -25,7 +25,7 @@ public class EditActivity extends Activity {
     private Button Editpassbtn;
     public ImageView deletetbtn, Editmailbtn;
     public EditText mEmail,mPassword;
-    public String userId;
+    public String userIdpublic, str1, str2;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,28 @@ public class EditActivity extends Activity {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                String mail = mEmail.getText().toString();
+                                String[] mailSplit = mail.split("@",0);
+                                Log.d("UserActivity", mailSplit[1]);
+                                //アドレスが学校のメールアドレスのときに学科も入れる
+                                if (mailSplit[1].equals("wiz.ac.jp")) {
+                                    str1 = mailSplit[0].substring(mailSplit[0].length()-8);
+                                    str2 = str1.substring(2, 4);
+                                    Log.d("UserActivity", str2);
+                                    switch (str2){
+                                        case "21": LoginUser.put("department", "情報システム科");
+                                            break;
+
+                                        case "24": LoginUser.put("department", "モバイルアプリケーション科");
+                                            break;
+
+                                        case "31": LoginUser.put("department", "情報システム工学科");
+                                            break;
+
+                                        case "41": LoginUser.put("department", "高度情報工学科");
+                                            break;
+                                    }
+                                }
                                 LoginUser.setMailAddress(mEmail.getText().toString());
                                 try {
                                     LoginUser.save();

@@ -56,8 +56,14 @@ public class SubjectAdapter extends BaseAdapter {
 //        View view = convertView;
         convertView = layoutInflater.inflate(R.layout.subjlist, parent, false);
 
-        ((TextView)convertView.findViewById(R.id.subjname)).setText(subjlist.get(position).getSubjectName());
+        int rate = subjlist.get(position).getAttendRate();
+        Log.d("SubjectAdapter", String.valueOf(rate));
+
+        ((TextView) convertView.findViewById(R.id.subjname)).setText(subjlist.get(position).getSubjectName());
         ((TextView)convertView.findViewById(R.id.attendrate)).setText(Integer.toString(subjlist.get(position).getAttendRate()));
+        if (rate < 80) {
+            ((TextView)convertView.findViewById(R.id.attendrate)).setTextColor(0xffff0000);
+        }
         ((TextView)convertView.findViewById(R.id.classroom)).setText(subjlist.get(position).getClassRoom());
 
 //        Button button = (Button) convertView.findViewById(R.id.attendbtn);
@@ -79,5 +85,10 @@ public class SubjectAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    @Override
+    public boolean isEnabled (int position){
+        return false;
     }
 }

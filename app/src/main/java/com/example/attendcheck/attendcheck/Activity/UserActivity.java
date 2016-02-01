@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +55,7 @@ import java.util.Calendar;
 public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTaskCallback,LocationListener {
 
     private NCMBUser LoginUser;
-    public String mailAddress, subjname;
+    public String mailAddress, subjname, str1,str2;
     private boolean flg;
     private Button PAbtn;
     public ImageView Editbtn,Logoutbtn;
@@ -71,6 +72,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     private IntentFilter intentFilter;
     private LocationManager manager = null;
     public double lat,lon;
+    public static ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,27 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         if (flg == true) {
             ShowLogInfo("flgがtrue");
             mailAddress = flgIntent.getStringExtra("mailaddress");
+            String[] mailSplit = mailAddress.split("@",0);
+            Log.d("UserActivity", mailSplit[1]);
+            //アドレスが学校のメールアドレスのときに学科も入れる
+            if (mailSplit[1].equals("wiz.ac.jp")) {
+                str1 = mailSplit[0].substring(mailSplit[0].length()-8);
+                str2 = str1.substring(2, 4);
+                Log.d("UserActivity", str2);
+                switch (str2){
+                    case "21": LoginUser.put("department", "情報システム科");
+                        break;
+
+                    case "24": LoginUser.put("department", "モバイルアプリケーション科");
+                        break;
+
+                    case "31": LoginUser.put("department", "情報システム工学科");
+                        break;
+
+                    case "41": LoginUser.put("department", "高度情報工学科");
+                        break;
+                }
+            }
             LoginUser.setMailAddress(mailAddress);
             LoginUser.put("position", "student");
 
@@ -250,6 +273,15 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 //                tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
                 if (((37.39300 <= lat) && (lat <= 37.39452)) && ((140.39000 <= lon) && (lon <= 140.39141))) {
+                    dialog = new ProgressDialog(UserActivity.this);
+                    dialog.setTitle("処理中");
+                    dialog.setMessage("出欠を確認中です。");
+                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    dialog.setCancelable(true);
+//                dialog.setOnCancelListener();
+                    dialog.setMax(100);
+                    dialog.setProgress(0);
+                    dialog.show();
                     Log.d("UserActivity", "latOK");
                     tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
                     Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
@@ -277,6 +309,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                                 .setNegativeButton("OK", null);
                         dialog.create().show();
                     }
+                    dialog.dismiss();
                 } else {
                     Log.d("UserActivity", "latNO");
                     AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
