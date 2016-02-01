@@ -40,7 +40,7 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
     private NCMBUser LoginUser;
     private NCMBObject object,object2;
 //    private Button Logoutbtn, periodbtn, Editbtn;
-    public ImageView Logoutbtn, periodbtn, Editbtn;
+    public ImageView Logoutbtn, periodbtn, Editbtn, departmentbtn;
     private boolean flg;
     public Spinner spinner, dayWeekSpinner, periodTimeSpinner, classroomSpinner;
     public Period_Time_Adapter period_time_adapter;
@@ -263,6 +263,18 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
                 });
             }
         });
+
+        departmentbtn = (ImageView)findViewById(R.id.department_btn);
+        departmentbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent d_intent = new Intent(TeacherActivity.this, DepartmentActivity.class);
+//                startActivity(d_intent);
+                Intent d_intent = new Intent(TeacherActivity.this, DepartmentActivity.class);
+                d_intent.putExtra("LoginUser", LoginUser.getObjectId());
+                startActivityForResult(d_intent, 2);
+            }
+        });
     }
 
     @Override
@@ -357,10 +369,12 @@ public class TeacherActivity extends Activity implements PeriodTimeAsyncTask.Asy
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 1:
+            case 2:
                 if (resultCode == RESULT_OK) {
                     if (data != null){
-                        finish();
+                        //       AsyncTaskの生成
+                        periodTimeAsyncTask = new PeriodTimeAsyncTask(this, context, this);
+                        periodTimeAsyncTask.execute(subjname);
                     }
                 }
                 break;

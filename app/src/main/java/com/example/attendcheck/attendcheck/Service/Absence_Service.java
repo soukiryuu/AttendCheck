@@ -162,8 +162,8 @@ public class Absence_Service extends Service {
         AlarmManager am6 = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
 
-        am1.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime(), target_time, pendingIntent);
+//        am1.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//                SystemClock.elapsedRealtime(), target_time, pendingIntent);
 //        am2.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 //                SystemClock.elapsedRealtime(), target_time[1], pendingIntent);
 //        am3.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -200,7 +200,7 @@ public class Absence_Service extends Service {
 
         if (target_ms6 >= now_ms) {
             Log.d("Absence_Service", "現在の日時と同じ");
-            startAlarm(context,target_ms6);
+//            startAlarm(context,target_ms6);
 
         }else {
             Log.d("Absence_Service","前回の設定が過去");
@@ -214,7 +214,7 @@ public class Absence_Service extends Service {
 //            target_ms5 = periodTime_setting.start_period[4].getTimeInMillis();
             target_ms6 = periodTime_setting.start_period[5].getTimeInMillis();
 //            target_ms = new long[]{target_ms1, target_ms2, target_ms3, target_ms4, target_ms5, target_ms6};
-            startAlarm(context,target_ms6);
+//            startAlarm(context,target_ms6);
         }
     }
 

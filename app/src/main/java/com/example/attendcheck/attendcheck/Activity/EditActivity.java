@@ -35,10 +35,6 @@ public class EditActivity extends Activity {
         LoginUser = NCMBUser.getCurrentUser();
         mEmail = (EditText) findViewById(R.id.editMailaddress);
 
-//        Intent i = getIntent();
-//        userId = i.getStringExtra("LoginUser");
-//        Log.d(TAG,userId);
-
         deletetbtn = (ImageView)findViewById(R.id.deleteBtn);
         deletetbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +94,11 @@ public class EditActivity extends Activity {
                                 } catch (NCMBException e) {
                                     e.printStackTrace();
                                 }
-//                                Intent editmailIntent = new Intent();
-//                                setResult(1, editmailIntent);
+                                AlertDialog.Builder deletedialog = new AlertDialog.Builder(EditActivity.this);
+                                deletedialog.setMessage("確認メールから変更を完了してください。")
+                                        .setTitle("変更を受け付けました")
+                                        .setPositiveButton("OK",null);
+                                deletedialog.create().show();
                             }
                         })
                         .setNegativeButton("キャンセル", null);
