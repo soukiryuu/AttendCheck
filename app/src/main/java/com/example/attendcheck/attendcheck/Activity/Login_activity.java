@@ -2,6 +2,7 @@ package com.example.attendcheck.attendcheck.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -25,11 +26,15 @@ public class Login_activity extends Activity {
     private EditText mUserMailAddress;
     private EditText mPassword;
     private NCMBUser LoginUser;
+    public ImageView logo;
+    public MediaPlayer mp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+//        mp = MediaPlayer.create(this, R.raw.system_on);
 
         //SDKの初期化(アプリで一回だけ)
         NCMB.initialize(this, getString(R.string.app_key),
@@ -72,27 +77,6 @@ public class Login_activity extends Activity {
                     Log.d("失敗",e.getMessage());
                     e.printStackTrace();
                 }
-
-//                try {
-//                    NCMBUserService userService = (NCMBUserService) NCMB.factory(NCMB.ServiceType.USER);
-//                    NCMBUser user = userService.loginByMail(userMailAddress, userPassword);
-//
-//                    NCMBUser.loginInBackground(userMailAddress, userPassword, new LoginCallback() {
-//                        @Override
-//                        public void done(NCMBUser ncmbUser, NCMBException e) {
-//                            if (e == null) {
-//                                Toast.makeText(getApplication(), "ログイン成功", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(Login_activity.this, LoginAfter_activity.class);
-//                                startActivity(intent);
-//                            } else {
-//                                Toast.makeText(getApplication(), "ログイン失敗！", Toast.LENGTH_SHORT).show();
-//                                Log.d("",e.getMessage());
-//                            }
-//                        }
-//                    });
-//                } catch (NCMBException e) {
-//
-//                }
             }
         });
         //新規登録のボタンが押されたときの処理
@@ -110,6 +94,15 @@ public class Login_activity extends Activity {
             public boolean onLongClick(View v) {
                 Intent intent = new Intent(Login_activity.this, SignUp_Teacher_Activity.class);
                 startActivity(intent);
+                return false;
+            }
+        });
+
+        logo = (ImageView)findViewById(R.id.logo);
+        logo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+//                mp.start();
                 return false;
             }
         });

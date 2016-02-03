@@ -10,9 +10,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -52,11 +54,11 @@ import java.util.Calendar;
 /**
  * Created by watanabehiroaki on 2015/11/24.
  */
-public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTaskCallback,LocationListener {
+public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTaskCallback,LocationListener, GpsStatus.Listener {
 
     private NCMBUser LoginUser;
     public String mailAddress, subjname, str1,str2;
-    private boolean flg;
+    private boolean flg, gps_flg;
     private Button PAbtn;
     public ImageView Editbtn,Logoutbtn;
     public ListView subjList;
@@ -72,12 +74,16 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     private IntentFilter intentFilter;
     private LocationManager manager = null;
     public double lat,lon;
-    public static ProgressDialog dialog;
+    public static ProgressDialog pa_dialog, gps_dialog;
+    public MediaPlayer mp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+//        mp = MediaPlayer.create(this, R.raw.user_ok);
+//        mp.start();
 
         //AlarmManager開始
 //        Absence_Service absence_service = new Absence_Service();
@@ -237,6 +243,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         LogOut();
         ShowLogInfo("onDestroy");
         manager.removeUpdates(this);
+        gps_dialog.dismiss();
         finish();
     }
 
@@ -272,16 +279,14 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 //                tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
-                if (((37.39300 <= lat) && (lat <= 37.39452)) && ((140.39000 <= lon) && (lon <= 140.39141))) {
-                    dialog = new ProgressDialog(UserActivity.this);
-                    dialog.setTitle("処理中");
-                    dialog.setMessage("出欠を確認中です。");
-                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    dialog.setCancelable(true);
+                if (((37.39300 <= lat) && (lat <= 37.39452)) && ((140.39000 <= lon) && (lon <= 140.39144))) {
+                    pa_dialog = new ProgressDialog(UserActivity.this);
+                    pa_dialog.setTitle("処理中");
+                    pa_dialog.setMessage("出欠を確認中です。");
+                    pa_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    pa_dialog.setCancelable(true);
 //                dialog.setOnCancelListener();
-                    dialog.setMax(100);
-                    dialog.setProgress(0);
-                    dialog.show();
+                    pa_dialog.show();
                     Log.d("UserActivity", "latOK");
                     tuitionTime = new TuitionTime(view.getTag(), LoginUser.getObjectId());
                     Log.d("ItemClick", "view=" + String.valueOf(view.getTag()));
@@ -309,7 +314,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                                 .setNegativeButton("OK", null);
                         dialog.create().show();
                     }
-                    dialog.dismiss();
+                    pa_dialog.dismiss();
                 } else {
                     Log.d("UserActivity", "latNO");
                     AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
@@ -348,9 +353,17 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         } else {
             ShowLogInfo("GPSがONになっている。");
             manager = (LocationManager) this.getSystemService(Service.LOCATION_SERVICE);
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+            manager.addGpsStatusListener(UserActivity.this);
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 //            startService(new Intent(this, LocationService.class));
             Toast.makeText(getApplicationContext(), "GPSはONです。", Toast.LENGTH_LONG).show();
+
+            gps_dialog = new ProgressDialog(UserActivity.this);
+            gps_dialog.setTitle("取得中");
+            gps_dialog.setMessage("位置情報を取得中です。");
+            gps_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            gps_dialog.setCancelable(false);
+//            gps_dialog.show();
         }
     }
 
@@ -392,5 +405,25 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onGpsStatusChanged(int event) {
+        String status = "";
+        if (event == GpsStatus.GPS_EVENT_FIRST_FIX) {
+            status = "FIRST FIX：初めて位置情報を確定した：";
+            gps_dialog.dismiss();
+            Log.d("UserActivity", "FIRST FIX gps_flg =" + gps_flg);
+        } else if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
+            status = "SATELLITE STATUS：GPSが位置情報を取得中";
+            Log.d("UserActivity", "SATELLITE STATUS gps_flg =" + gps_flg);
+        } else if (event == GpsStatus.GPS_EVENT_STARTED) {
+            status = "STARTED：GPSを使い位置情報の取得を開始した";
+            gps_dialog.show();
+        } else if (event == GpsStatus.GPS_EVENT_STOPPED) {
+            status = "STOPPED：GPSの位置情報取得が終了した";
+        }
+        Log.d("onGpsStatusChanged", status);
+
     }
 }

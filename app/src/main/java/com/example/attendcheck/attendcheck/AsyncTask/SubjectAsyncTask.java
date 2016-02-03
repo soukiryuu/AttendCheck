@@ -56,10 +56,8 @@ public class SubjectAsyncTask extends AsyncTask<String, Integer, ArrayList<Subje
         dialog.setTitle("処理中");
         dialog.setMessage("データを取得中です。");
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setCancelable(true);
+//        dialog.setCancelable(true);
         dialog.setOnCancelListener(this);
-        dialog.setMax(100);
-        dialog.setProgress(0);
         dialog.show();
     }
 
