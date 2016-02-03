@@ -49,6 +49,8 @@ import com.nifty.cloud.mb.core.NCMBUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -76,7 +78,8 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
     public double lat,lon;
     public static ProgressDialog pa_dialog, gps_dialog;
     public MediaPlayer mp = null;
-
+    private Timer timer;
+    public long time = 0L;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -412,6 +415,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
         String status = "";
         if (event == GpsStatus.GPS_EVENT_FIRST_FIX) {
             status = "FIRST FIX：初めて位置情報を確定した：";
+            timer.cancel();
             gps_dialog.dismiss();
             Log.d("UserActivity", "FIRST FIX gps_flg =" + gps_flg);
         } else if (event == GpsStatus.GPS_EVENT_SATELLITE_STATUS) {
@@ -419,6 +423,36 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             Log.d("UserActivity", "SATELLITE STATUS gps_flg =" + gps_flg);
         } else if (event == GpsStatus.GPS_EVENT_STARTED) {
             status = "STARTED：GPSを使い位置情報の取得を開始した";
+            timer = new Timer(true);
+            final Handler handler = new Handler();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (time == 30000L) {
+                                gps_dialog.dismiss();
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
+                                dialog.setMessage("位置情報取得中タイムアウトしました。GPSの設定を確認してください。\n設定画面を開きますか？")
+                                        .setTitle("位置情報エラー")
+                                        .setPositiveButton("開く", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // 設定画面の呼出し
+                                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .setNegativeButton("キャンセル", null);
+                                dialog.create().show();
+                            }
+
+                            time = time + 1000L;
+                        }
+                    });
+                }
+            },0L,1000L);
             gps_dialog.show();
         } else if (event == GpsStatus.GPS_EVENT_STOPPED) {
             status = "STOPPED：GPSの位置情報取得が終了した";
