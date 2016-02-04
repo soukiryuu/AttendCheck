@@ -366,6 +366,26 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
             gps_dialog.setMessage("位置情報を取得中です。");
             gps_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             gps_dialog.setCancelable(false);
+            gps_dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "キャンセル", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    timer.cancel();
+                    gps_dialog.dismiss();
+                    AlertDialog.Builder cancel_dialog = new AlertDialog.Builder(UserActivity.this);
+                    cancel_dialog.setMessage("位置情報取得中にキャンセルしました。GPS設定画面を開きますか？")
+                            .setTitle("位置情報キャンセル")
+                            .setPositiveButton("開く", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 設定画面の呼出し
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("キャンセル", null);
+                    cancel_dialog.create().show();
+                }
+            });
 //            gps_dialog.show();
         }
     }
@@ -434,7 +454,7 @@ public class UserActivity extends Activity implements SubjectAsyncTask.AsyncTask
                             if (time == 30000L) {
                                 gps_dialog.dismiss();
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(UserActivity.this);
-                                dialog.setMessage("位置情報取得中タイムアウトしました。GPSの設定を確認してください。\n設定画面を開きますか？")
+                                dialog.setMessage("位置情報取得中タイムアウトしました。GPSの設定を確認してください。設定画面を開きますか？")
                                         .setTitle("位置情報エラー")
                                         .setPositiveButton("開く", new DialogInterface.OnClickListener() {
                                             @Override
